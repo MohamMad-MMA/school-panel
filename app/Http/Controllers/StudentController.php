@@ -14,16 +14,24 @@ class StudentController extends Controller
     public function transcript(Student $student)
     {
         $gradeId = $student->schoolClass->grade_id;
-        $subjects = Subject::where('grade_id', $gradeId)->with(['scores' => function ($q) use ($student) {
-            $q->where('student_id', $student->id);
-        }, 'teachers'])->get();
-        $average = $subjects->pluck('scores')->flatten()->pluck('score')->filter()->avg();
+        $subjects = Subject::where('grade_id', $gradeId)
+            ->with(['scores' => function ($q) use ($student) {
+                $q->where('student_id', $student->id);
+            }, 'teachers'])
+            ->get();
+        $average = $subjects->pluck('scores')->flatten()->pluck('score')
+            ->filter(fn($score) => $score !== null)
+            ->avg();
         return view('students.transcript', compact('student', 'subjects', 'average'));
-
     }
     public function index()
     {
-        $students = Student::with('schoolClass')->get();
+        $students = Student::with('schoolClass', 'scores')->get();
+        foreach ($students as $student) {
+            $total = $student->scores->sum('score');
+            $count = $student->scores->count();
+            $student->average = $count > 0 ? $total / $count : null;
+        }
         return view('students.index', compact('students'));
     }
     public function create()
@@ -58,10 +66,6 @@ class StudentController extends Controller
         $student->update($request->all());
         return redirect()->route('students.index');
     }
-    public function show(string $id)
-    {
-        
-    }
     public function edit(Student $student)
     {
         $classes = SchoolClass::all();
@@ -70,7 +74,6 @@ class StudentController extends Controller
     public function destroy(Student $student)
     {
         $student->delete();
-
         return redirect()->route('students.index')->with('success', 'دانش‌آموز با موفقیت حذف شد.');
     }
     public function updateScore(Request $request, Student $student, Subject $subject)
@@ -78,12 +81,10 @@ class StudentController extends Controller
         $request->validate([
             'score' => 'required|numeric|min:0|max:20',
         ]);
-
         Score::updateOrCreate(
             ['student_id' => $student->id, 'subject_id' => $subject->id],
             ['score' => $request->score]
         );
-
         return back()->with('success', 'نمره ثبت شد.');
     }
     public function storeScore(Request $request, Student $student, Subject $subject)

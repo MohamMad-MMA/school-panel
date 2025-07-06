@@ -27,7 +27,7 @@
                     <td>{{ $subject->name }}</td>
                     <td>{{ $subject->topics_count }}</td>
                     <td>{{ $subject->grade->name ?? '-' }}</td>
-                    <td>{{ number_format($subject->average_score, 2) }}</td>
+                    <td>{{ $subject->average_score }}</td>
                     <td class="actions">
                         <a href="{{ route('subjects.edit', $subject->id) }}">✏️ ویرایش</a>
                         <form action="{{ route('subjects.destroy', $subject->id) }}" method="POST" onsubmit="return confirm('مطمئنی؟');">

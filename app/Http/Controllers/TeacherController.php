@@ -16,7 +16,7 @@ class TeacherController extends Controller
     public function index()
     {
         $teachers = Teacher::all();
-        $teachers = Teacher::with(['subjects.scores'])->get();
+        $teachers = Teacher::with(['subjectClasses.subject', 'subjectClasses.schoolClass'])->get();
         foreach ($teachers as $teacher) {
             $subjectAverages = [];
             foreach ($teacher->subjects as $subject) {
@@ -25,7 +25,6 @@ class TeacherController extends Controller
                     $subjectAverages[] = $avg;
                 }
             }
-
             $teacher->average_of_averages = count($subjectAverages)
                 ? round(array_sum($subjectAverages) / count($subjectAverages), 2)
                 : null;
@@ -38,7 +37,6 @@ class TeacherController extends Controller
         $teacher->delete();
         return redirect()->route('teachers.index')->with('success', 'معلم با موفقیت حذف شد.');
     }
-
     public function edit(Teacher $teacher)
     {
         $subjects = Subject::with('grade.classes')->get();
@@ -51,7 +49,6 @@ class TeacherController extends Controller
             ->toArray();
         return view('teachers.edit', compact('teacher', 'subjects', 'currentPairs'));
     }
-
     public function update(Request $request, Teacher $teacher)
     {
         $request->validate([
@@ -71,7 +68,6 @@ class TeacherController extends Controller
         if ($request->has('subjects_classes')) {
             foreach ($request->subjects_classes as $pair) {
                 [$subjectId, $classId] = explode('_', $pair);
-
                 DB::table('teacher_subject_class')->insert([
                     'teacher_id' => $teacher->id,
                     'subject_id' => $subjectId,

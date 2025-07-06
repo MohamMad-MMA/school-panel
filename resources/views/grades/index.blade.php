@@ -14,6 +14,11 @@
             <tr>
                 <th>#</th>
                 <th>نام پایه</th>
+                <th>تعداد کلاس‌ها</th>
+                <th>تعداد دروس</th>
+                <th>تعداد دانش‌آموزان</th>
+                <th>تعداد معلمان</th>
+                <th>میانگین معدل‌ها</th>
                 <th>عملیات</th>
             </tr>
         </thead>
@@ -22,6 +27,11 @@
                 <tr>
                     <td>{{ $index + 1 }}</td>
                     <td>{{ $grade->name }}</td>
+                    <td>{{ $grade->classes_count }}</td>
+                    <td>{{ $grade->subjects_count }}</td>
+                    <td>{{ $grade->students_count }}</td>
+                    <td>{{ $grade->teachers_count }}</td>
+                    <td>{{ $grade->average_score }}</td>
                     <td class="actions">
                         <a href="{{ route('grades.edit', $grade->id) }}">✏️ ویرایش</a>
                         <form action="{{ route('grades.destroy', $grade->id) }}" method="POST" onsubmit="return confirm('آیا مطمئنی؟');">

@@ -24,6 +24,7 @@ Route::prefix('admin')->group(function () {
     Route::resource('subjects', SubjectController::class);
     Route::resource('grades', GradeController::class);
 });
+Route::get('/classes/{class}', [SchoolClassController::class, 'show'])->name('school-classes.show');
 Route::resource('admin/students', StudentController::class);
 Route::get('admin/students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit');
 Route::put('admin/students/{student}', [StudentController::class, 'update'])->name('students.update');

@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SchoolClass;
 use App\Models\Grade;
+use Illuminate\Support\Facades\DB;
+use App\Models\Teacher;
+use App\Models\Subject;
 
 class SchoolClassController extends Controller
 {
@@ -65,8 +68,47 @@ class SchoolClassController extends Controller
         ], [
             'name.unique' => 'کلاسی با این نام قبلاً ثبت شده است.',
         ]);
-
         $schoolClass->update($request->all());
         return redirect()->route('school-classes.index');
+    }
+    public function show(SchoolClass $class)
+    {
+        $class->load('grade');
+        $students = $class->students()->with('scores')->get();
+        foreach ($students as $student) {
+            $total = 0;
+            $count = 0;
+            foreach ($student->scores as $score) {
+                $total += $score->score;
+                $count++;
+            }
+            $student->average = $count > 0 ? $total / $count : null;
+        }
+        $teacherPairs = DB::table('teacher_subject_class')
+            ->where('school_class_id', $class->id)
+            ->get();
+        $teachers = [];
+        foreach ($teacherPairs as $pair) {
+            $teacher = Teacher::find($pair->teacher_id);
+            $subject = Subject::find($pair->subject_id);
+            if ($teacher && $subject) {
+                $avgScore = DB::table('scores')
+                    ->join('students', 'scores.student_id', '=', 'students.id')
+                    ->where('students.school_class_id', $class->id)
+                    ->where('scores.subject_id', $subject->id)
+                    ->avg('score');
+
+                $teachers[] = [
+                    'teacher' => $teacher,
+                    'subject' => $subject,
+                    'average' => $avgScore !== null ? round($avgScore, 2) : null,
+                ];
+            }
+        }
+        return view('classes.show', [
+            'schoolClass' => $class,
+            'students' => $students,
+            'teachers' => $teachers,
+        ]);
     }
 }

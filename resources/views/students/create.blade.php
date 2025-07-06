@@ -64,6 +64,7 @@
             @endforeach
         </select>
         <button type="submit">ثبت دانش‌آموز</button>
+        <a href="{{ route('students.index') }}" style="display:inline-block; margin-top:20px; background:#6c757d; color:white; padding:8px 15px; text-decoration:none; border-radius:5px;">⬅ بازگشت به لیست دانش‌آموزان</a>
     </form>
 </body>
 </html>

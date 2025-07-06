@@ -16,6 +16,7 @@
                 <th>نام</th>
                 <th>نام خانوادگی</th>
                 <th>کد ملی</th>
+                <th>معدل</th>
                 <th>کلاس</th>
                 <th>عملیات</th>
             </tr>
@@ -27,6 +28,7 @@
                     <td>{{ $student->first_name }}</td>
                     <td>{{ $student->last_name }}</td>
                     <td>{{ $student->national_code }}</td>
+                    <td>{{ number_format($student->average ?? 0, 2) }}</td>
                     <td>{{ $student->schoolClass->name ?? '-' }}</td>
                     <td class="actions">
                         <a href="{{ route('students.transcript', $student->id) }}">📄 کارنامه</a>

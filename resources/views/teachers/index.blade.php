@@ -17,7 +17,7 @@
                 <th>نام خانوادگی</th>
                 <th>کد ملی</th>
                 <th>درس-کلاس</th>
-                <th>میانگین نمرات دانش اموزان</th>
+                <th>میانگین نمرات دانش آموزان</th>
                 <th>عملیات</th>
             </tr>
         </thead>
@@ -29,15 +29,9 @@
                     <td>{{ $teacher->last_name }}</td>
                     <td>{{ $teacher->national_code }}</td>
                     <td>
-                        @if($teacher->subjects)
-                            @foreach($teacher->subjects as $subject)
-                                @foreach($subject->classes as $class)
-                                    {{ $subject->name }} - کلاس {{ $class->name }}<br>
-                                @endforeach
-                            @endforeach
-                        @else
-                            ---
-                        @endif
+                        @foreach($teacher->subjectClasses as $item)
+                            {{ $item->subject->name }} - کلاس {{ $item->schoolClass->name }}<br>
+                        @endforeach
                     </td>
                     <td>{{ $teacher->average_of_averages !== null ? number_format($teacher->average_of_averages, 2) : '---' }}</td>
                     <td class="actions">

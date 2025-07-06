@@ -31,6 +31,7 @@
                     <td>{{ $class->teachers_count }}</td>
                     <td>{{ $class->average_score !== null ? number_format($class->average_score, 2) : '---' }}</td>
                     <td class="actions">
+                        <a href="{{ route('classes.show', $class->id) }}">🔍 جزئیات</a>
                         <a href="{{ route('classes.edit', $class->id) }}">✏️ ویرایش</a>
                         <form action="{{ route('classes.destroy', $class->id) }}" method="POST" onsubmit="return confirm('مطمئنی؟');">
                             @csrf

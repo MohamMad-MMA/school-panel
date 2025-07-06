@@ -4,11 +4,16 @@
     <meta charset="UTF-8">
     <title>کارنامه</title>
     <style>
-        body {
-            font-family: sans-serif;
-            direction: rtl;
-            background-color: #f9f9f9;
-            padding: 40px;
+        body { font-family: sans-serif; direction: rtl; background: #f9f9f9; padding: 40px; }
+        table {table-layout: fixed;}    
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: center;
+            width: 1%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         h2 {
             margin-bottom: 20px;
@@ -21,25 +26,6 @@
             padding: 8px 15px;
             text-decoration: none;
             border-radius: 6px;
-        }
-        table {
-            width: 100%;
-            background: white;
-            border-collapse: collapse;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-            table-layout: fixed;
-        }
-        th, td {
-            padding: 12px;
-            border: 1px solid #ccc;
-            text-align: center;
-            padding: 12px;
-            border: 1px solid #ccc;
-            text-align: center;
-            width: 1%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
         th {
             background: #3490dc;
@@ -68,7 +54,7 @@
 </head>
 <body>
     <h2>📄 کارنامه: {{ $student->first_name }} {{ $student->last_name }}</h2>
-    <a class="back-button" href="{{ route('students.index') }}">⬅️ بازگشت به لیست دانش‌آموزان</a>
+    <a class="back-button" href="javascript:history.back()" class="back-btn">⬅️ بازگشت</a>
     <table>
         <thead>
             <tr>
@@ -84,7 +70,10 @@
                     <td>{{ $subject->name }}</td>
                     <td>{{ $subject->scores->first()->score ?? '---' }}</td>
                     <td>
-                        @foreach($subject->teachers as $teacher)
+                        @php
+                            $teacherNames = $subject->teachers->pluck('first_name', 'last_name')->unique();
+                        @endphp
+                        @foreach($subject->teachers->unique('id') as $teacher)
                             {{ $teacher->first_name }} {{ $teacher->last_name }}<br>
                         @endforeach
                     </td>

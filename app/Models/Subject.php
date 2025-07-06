@@ -12,7 +12,7 @@ class Subject extends Model
     {
         return $this->belongsTo(Grade::class);
     }
-        public function scores()
+    public function scores()
     {
         return $this->hasMany(Score::class);
     }

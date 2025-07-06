@@ -10,7 +10,7 @@ class SchoolClass extends Model
     protected $fillable = ['name', 'grade_id'];
     public function grade()
     {
-        return $this->belongsTo(Grade::class);
+        return $this->belongsTo(\App\Models\Grade::class, 'grade_id');
     }
     public function subjects()
     {

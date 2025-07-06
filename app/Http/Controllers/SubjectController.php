@@ -12,7 +12,12 @@ class SubjectController extends Controller
 {
     public function index()
     {
-        $subjects = \App\Models\Subject::all();
+        $subjects = Subject::with('grade')->get();
+
+        foreach ($subjects as $subject) {
+            $average = $subject->scores()->avg('score');
+            $subject->average_score = $average !== null ? number_format($average, 2) : '---';
+        }
         return view('subjects.index', compact('subjects'));
     }
     public function create()
@@ -29,7 +34,6 @@ class SubjectController extends Controller
     {
         $subject = \App\Models\Subject::findOrFail($id);
         $subject->delete();
-
         return redirect()->route('subjects.index')->with('success', 'درس با موفقیت حذف شد.');
     }
     public function store(Request $request)
