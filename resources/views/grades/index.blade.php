@@ -42,7 +42,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="3">هیچ پایه‌ای ثبت نشده است.</td></tr>
+                <tr><td colspan="8">هیچ پایه‌ای ثبت نشده است.</td></tr>
             @endforelse
         </tbody>
     </table>

@@ -41,7 +41,7 @@
                     </td>
                 </tr>
             @empty
-                <tr><td colspan="6">هیچ دانش‌آموزی ثبت نشده است.</td></tr>
+                <tr><td colspan="7">هیچ دانش‌آموزی ثبت نشده است.</td></tr>
             @endforelse
         </tbody>
     </table>
